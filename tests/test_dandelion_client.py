@@ -14,4 +14,4 @@ def test_client_creation():
 
 def test_client_up():
     dc = DandelionClient()
-    # assert dc.up == True, f'client not up. {dc.networks}'
+    assert dc.up == True, f'client not up. {dc.networks}'

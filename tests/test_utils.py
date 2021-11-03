@@ -11,4 +11,4 @@ def test_ping():
     logger.info(res)
     res = ping('google.com')
     logger.info(res)
-    assert 1 == 0
+    assert len(res) > 0

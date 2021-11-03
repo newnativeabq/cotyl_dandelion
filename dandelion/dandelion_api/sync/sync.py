@@ -6,7 +6,9 @@ Sync
 Sync with Dandelion network(s) and get access information
 """
 
-import subprocess
+
+from dandelion.utils import ping
+
 
 
 class SyncService():
@@ -28,7 +30,7 @@ class SyncService():
     @property
     def graphql_api(self):
         sync = {
-            'uri': f'https://graphql-api.{self.network}.dandelion.link',  ## Works until multi-domain/service
+            'uri': f'graphql-api.{self.network}.dandelion.link',  ## Works until multi-domain/service
             'header': {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -40,7 +42,7 @@ class SyncService():
     @property
     def postgres_api(self):
         sync = {
-            'uri': f'https://postgrest-api.{self.network}.dandelion.link',
+            'uri': f'postgrest-api.{self.network}.dandelion.link',
             'header': {
                 'Content-Type': 'application/json',
             },
@@ -55,5 +57,17 @@ class SyncService():
 
     
     def ping(self, sync):
-        ping_results = None
-        sync['ping'] = ping_results
+        host = sync['uri']
+        print('imp ping getting', host)
+        response = ping(host)
+
+        if response.__contains__('0%'):
+            status = 'up'
+        else:
+            status = 'down'
+
+        sync['ping'] = {
+            'res': response,
+            'status': status,
+        }
+        return sync
