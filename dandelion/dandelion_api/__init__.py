@@ -1,2 +1,1 @@
-class DandelionClient():
-    pass
+from .client import DandelionClient
