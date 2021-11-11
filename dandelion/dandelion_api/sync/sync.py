@@ -21,33 +21,39 @@ class SyncService():
     @property
     def all_networks(self):
         syncs = [
-            self.graphql_api,
-            self.postgres_api,
+            self.graphql,
+            self.postgres,
         ]
         return syncs
 
     
     @property
-    def graphql_api(self):
+    def graphql(self):
         sync = {
-            'uri': f'graphql-api.{self.network}.dandelion.link',  ## Works until multi-domain/service
+            'host': f'graphql-api.{self.network}.dandelion.link',  ## Works until multi-domain/service
             'header': {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
+            'protocol': 'http://'
         }
         return self.check_available(sync)
 
     
     @property
-    def postgres_api(self):
+    def postgres(self):
         sync = {
-            'uri': f'postgrest-api.{self.network}.dandelion.link',
+            'host': f'postgrest-api.{self.network}.dandelion.link',
             'header': {
                 'Content-Type': 'application/json',
             },
+            'protocol': 'http://'
         }
         return self.check_available(sync)
+
+    
+    def __getitem__(self, key):
+        return getattr(self, key)
 
 
     def check_available(self, sync):
@@ -57,8 +63,7 @@ class SyncService():
 
     
     def ping(self, sync):
-        host = sync['uri']
-        print('imp ping getting', host)
+        host = sync['host']
         response = ping(host)
 
         if response.__contains__('0%'):
